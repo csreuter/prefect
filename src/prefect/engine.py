@@ -173,6 +173,12 @@ def enter_flow_run_engine_from_flow_call(
         [create_call(wait_for_global_loop_exit)] if not is_subflow_run else None
     )
 
+    # WARNING: You must define any context managers here to pass to our concurrency
+    # api instead of entering them in here in the engine entrypoint. Otherwise, async
+    # flows will not use the context as this function _exits_ to return an awaitable to
+    # the user. Generally, you should enter contexts _within_ the async `begin_run`
+    # instead but if you need to enter a context from the main thread you'll need to do
+    # it here.
     contexts = [capture_sigterm()]
 
     if flow.isasync and (
@@ -208,7 +214,7 @@ def enter_flow_run_engine_from_subprocess(flow_run_id: UUID) -> State:
     setup_logging()
 
     state = from_sync.wait_for_call_in_loop_thread(
-        create_call(retrieve_flow_then_begin_flow_run, flow_run_id)
+        create_call(retrieve_flow_then_begin_flow_run, flow_run_id),
     )
 
     APILogHandler.flush()
