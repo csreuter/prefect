@@ -15,15 +15,15 @@ import prefect.context
 import prefect.settings
 from prefect.cli._utilities import exit_with_error
 from prefect.cli.root import app
-from prefect.exceptions import ObjectNotFound
-from prefect.flows import load_flow_from_entrypoint
-from prefect.projects import find_prefect_directory, register_flow
-from prefect.projects.steps import run_step
-from prefect.server.schemas.schedules import (
+from prefect.client.schemas.schedules import (
     CronSchedule,
     IntervalSchedule,
     RRuleSchedule,
 )
+from prefect.exceptions import ObjectNotFound
+from prefect.flows import load_flow_from_entrypoint
+from prefect.projects import find_prefect_directory, register_flow
+from prefect.projects.steps import run_step
 from prefect.settings import PREFECT_UI_URL
 from prefect.utilities.asyncutils import run_sync_in_worker_thread
 from prefect.utilities.callables import parameter_schema

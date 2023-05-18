@@ -4,8 +4,7 @@ from uuid import UUID
 from .schemas import RelatedResource
 
 if TYPE_CHECKING:
-    from prefect.client.schemas import FlowRun
-    from prefect.server.schemas.core import Flow
+    from prefect.client.schemas.objects import Flow, FlowRun
 
 
 ObjectDict = Dict[str, Union["Flow", "FlowRun"]]

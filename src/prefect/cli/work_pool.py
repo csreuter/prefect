@@ -16,8 +16,8 @@ from prefect._internal.compatibility.experimental import (
 from prefect.cli._types import PrefectTyper
 from prefect.cli._utilities import exit_with_error, exit_with_success
 from prefect.cli.root import app
+from prefect.client.schemas.actions import WorkPoolCreate, WorkPoolUpdate
 from prefect.exceptions import ObjectAlreadyExists, ObjectNotFound
-from prefect.server.schemas.actions import WorkPoolCreate, WorkPoolUpdate
 from prefect.settings import PREFECT_API_KEY, PREFECT_API_URL, PREFECT_CLOUD_API_URL
 from prefect.utilities.dispatch import get_registry_for_type
 from prefect.workers.base import BaseWorker

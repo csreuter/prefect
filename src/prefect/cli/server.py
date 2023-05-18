@@ -14,13 +14,6 @@ from prefect.cli._types import PrefectTyper, SettingsOption
 from prefect.cli._utilities import exit_with_error, exit_with_success
 from prefect.cli.root import app
 from prefect.logging import get_logger
-from prefect.server.database.alembic_commands import (
-    alembic_downgrade,
-    alembic_revision,
-    alembic_stamp,
-    alembic_upgrade,
-)
-from prefect.server.database.dependencies import provide_database_interface
 from prefect.settings import (
     PREFECT_API_SERVICES_LATE_RUNS_ENABLED,
     PREFECT_API_SERVICES_SCHEDULER_ENABLED,
@@ -181,6 +174,8 @@ async def start(
 @database_app.command()
 async def reset(yes: bool = typer.Option(False, "--yes", "-y")):
     """Drop and recreate all Prefect database tables"""
+    from prefect.server.database.dependencies import provide_database_interface
+
     db = provide_database_interface()
     engine = await db.engine()
     if not yes:
@@ -218,6 +213,9 @@ async def upgrade(
     ),
 ):
     """Upgrade the Prefect database"""
+    from prefect.server.database.alembic_commands import alembic_upgrade
+    from prefect.server.database.dependencies import provide_database_interface
+
     db = provide_database_interface()
     engine = await db.engine()
 
@@ -255,7 +253,11 @@ async def downgrade(
     ),
 ):
     """Downgrade the Prefect database"""
+    from prefect.server.database.alembic_commands import alembic_downgrade
+    from prefect.server.database.dependencies import provide_database_interface
+
     db = provide_database_interface()
+
     engine = await db.engine()
 
     if not yes:
@@ -286,6 +288,7 @@ async def revision(
     autogenerate: bool = False,
 ):
     """Create a new migration for the Prefect database"""
+    from prefect.server.database.alembic_commands import alembic_revision
 
     app.console.print("Running migration file creation ...")
     await run_sync_in_worker_thread(
@@ -300,6 +303,7 @@ async def revision(
 @database_app.command()
 async def stamp(revision: str):
     """Stamp the revision table with the given revision; don't run any migrations"""
+    from prefect.server.database.alembic_commands import alembic_stamp
 
     app.console.print("Stamping database with revision ...")
     await run_sync_in_worker_thread(alembic_stamp, revision=revision)
